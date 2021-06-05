@@ -1,0 +1,23 @@
+version: 0.2
+
+env:
+  variables:
+    AWS_DEFAULT_REGION: "us-east-2"
+    ACCOUNT: 1234
+    VERSION: "dummy"
+phases:
+  install:
+    runtime-versions:
+      nodejs: 10
+  pre_build:
+    commands:
+      - echo "[info] starting build"
+
+  build:
+    commands:
+      - echo "[info] building"
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ACCOUNT.dkr.ecr.us-east-2.amazonaws.com
+      - docker build . --progress=plain -t shopify-app:$VERSION
+      - docker tag shopify-app:$VERSION $ACCOUNT.dkr.ecr.us-east-2.amazonaws.com/shopify-app:$VERSION
+      - docker push $ACCOUNT.dkr.ecr.us-east-2.amazonaws.com/shopify-app:$VERSION
+      
