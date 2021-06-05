@@ -1,7 +1,11 @@
 This projects runs a shopify app on aws
 
 It deploys a simple Shopify app as an ECS service with a dedicated domain and ssl certificate on aws. The app is based on the Nodejs sample from the Shopify cli.
-For more information about the app itself see: https://shopify.dev/tutorials/build-a-shopify-app-with-node-and-react and https://github.com/Shopify/shopify-app-node
+
+For more information about the app itself see:
+
+- https://shopify.dev/tutorials/build-a-shopify-app-with-node-and-react
+- https://github.com/Shopify/shopify-app-node
 
 This a simplified diagram of the generated/involved resources:
 ![Alt](resources.png)
