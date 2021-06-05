@@ -1,6 +1,6 @@
 This projects runs a shopify app on aws
 
-It deploys a simple Shopify app as an ECS service with a dedicated domain and ssl certificate on aws. The app is based on the Nodejs sample from the Shopify cli.
+It deploys a simple Shopify app as an ECS service with a dedicated domain and ssl certificate on aws. The app is based on the Nodejs sample from the Shopify cli and the resources are deployed with CDK.
 
 For more information about the app itself see:
 
@@ -34,10 +34,21 @@ This a simplified diagram of the generated/involved resources:
 
 Note that the codebuild projects are based on bitbucket.
 
-### Modifications done to https://github.com/Shopify/shopify-app-node
+### Shopify APP Modifications
+
+Modifications done to https://github.com/Shopify/shopify-app-node
 
 1. The app created by the shopify cli is based on a .env file to read the configuration. This project separates the code/docker image from the configuration so that the same docker image can be deployed to different instances and it still works. For this purpose the next.config.js was modified to use publicRuntimeConfig to receive the SHOPIFY_API_KEY from the ENV and make it available on the frontend.
 2. A health endpoint /health is implemented which is used from the AWS ECS
+
+### Infrastructure
+
+The infrastructure project creates the following resources:
+
+- ECS cluster with an application load balancer from ecs_patterns
+- An SSL certificate
+- An api gateway with a custom domain (linked to the certificate) that proxies all calls to the load balancer
+- A route 53 alias pointing to the api gateway
 
 # Local development
 
