@@ -1,0 +1,212 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot 1`] = `
+Object {
+  "Resources": Object {
+    "CodebuildEE61DA16": Object {
+      "Properties": Object {
+        "Artifacts": Object {
+          "Type": "NO_ARTIFACTS",
+        },
+        "EncryptionKey": "alias/aws/s3",
+        "Environment": Object {
+          "ComputeType": "BUILD_GENERAL1_SMALL",
+          "Image": "aws/codebuild/amazonlinux2-x86_64-standard:3.0",
+          "ImagePullCredentialsType": "CODEBUILD",
+          "PrivilegedMode": true,
+          "Type": "LINUX_CONTAINER",
+        },
+        "Name": "shopify-app-docker",
+        "ServiceRole": Object {
+          "Fn::GetAtt": Array [
+            "codebuildRole92FB11B8",
+            "Arn",
+          ],
+        },
+        "Source": Object {
+          "BuildSpec": "ci-cd/docker/buildspec.yaml",
+          "Location": "https://bitbucket.org/mybitbucket/shopify-app.git",
+          "ReportBuildStatus": false,
+          "Type": "BITBUCKET",
+        },
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "codebuild-shopify-app-docker",
+          },
+        ],
+        "TimeoutInMinutes": 10,
+      },
+      "Type": "AWS::CodeBuild::Project",
+    },
+    "codebuildRole92FB11B8": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "codebuild.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "codebuildRoleDefaultPolicy47F57BA5": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            Object {
+              "Action": Array [
+                "ecr:GetAuthorizationToken",
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:GetRepositoryPolicy",
+                "ecr:DescribeRepositories",
+                "ecr:ListImages",
+                "ecr:DescribeImages",
+                "ecr:BatchGetImage",
+                "ecr:PutImage",
+                "ecr:InitiateLayerUpload",
+                "ecr:UploadLayerPart",
+                "ecr:CompleteLayerUpload",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            Object {
+              "Action": Array [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": Array [
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:",
+                      Object {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":logs:",
+                      Object {
+                        "Ref": "AWS::Region",
+                      },
+                      ":",
+                      Object {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":log-group:/aws/codebuild/",
+                      Object {
+                        "Ref": "CodebuildEE61DA16",
+                      },
+                    ],
+                  ],
+                },
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:",
+                      Object {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":logs:",
+                      Object {
+                        "Ref": "AWS::Region",
+                      },
+                      ":",
+                      Object {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":log-group:/aws/codebuild/",
+                      Object {
+                        "Ref": "CodebuildEE61DA16",
+                      },
+                      ":*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            Object {
+              "Action": Array [
+                "codebuild:CreateReportGroup",
+                "codebuild:CreateReport",
+                "codebuild:UpdateReport",
+                "codebuild:BatchPutTestCases",
+                "codebuild:BatchPutCodeCoverages",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    "arn:",
+                    Object {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":codebuild:",
+                    Object {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    Object {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":report-group/",
+                    Object {
+                      "Ref": "CodebuildEE61DA16",
+                    },
+                    "-*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "codebuildRoleDefaultPolicy47F57BA5",
+        "Roles": Array [
+          Object {
+            "Ref": "codebuildRole92FB11B8",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "shopifyapp52832147": Object {
+      "DeletionPolicy": "Retain",
+      "Properties": Object {
+        "LifecyclePolicy": Object {
+          "LifecyclePolicyText": "{\\"rules\\":[{\\"rulePriority\\":1,\\"selection\\":{\\"tagStatus\\":\\"untagged\\",\\"countType\\":\\"sinceImagePushed\\",\\"countNumber\\":1,\\"countUnit\\":\\"days\\"},\\"action\\":{\\"type\\":\\"expire\\"}},{\\"rulePriority\\":2,\\"selection\\":{\\"tagStatus\\":\\"tagged\\",\\"tagPrefixList\\":[\\"PUL\\",\\"develop\\",\\"master\\"],\\"countType\\":\\"sinceImagePushed\\",\\"countNumber\\":30,\\"countUnit\\":\\"days\\"},\\"action\\":{\\"type\\":\\"expire\\"}}]}",
+        },
+        "RepositoryName": "shopify-app",
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "shopify-app",
+          },
+        ],
+      },
+      "Type": "AWS::ECR::Repository",
+      "UpdateReplacePolicy": "Retain",
+    },
+  },
+}
+`;

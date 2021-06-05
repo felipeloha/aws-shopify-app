@@ -1,0 +1,965 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Stack snapshot 1`] = `
+Object {
+  "Outputs": Object {
+    "ShopifyAppServiceLoadBalancerDNSF864C26D": Object {
+      "Value": Object {
+        "Fn::GetAtt": Array [
+          "ShopifyAppServiceLB7084D25F",
+          "DNSName",
+        ],
+      },
+    },
+    "ShopifyAppServiceServiceURL855B3B25": Object {
+      "Value": Object {
+        "Fn::Join": Array [
+          "",
+          Array [
+            "http://",
+            Object {
+              "Fn::GetAtt": Array [
+                "ShopifyAppServiceLB7084D25F",
+                "DNSName",
+              ],
+            },
+          ],
+        ],
+      },
+    },
+    "teststackapiEndpoint2C084DF5": Object {
+      "Value": Object {
+        "Fn::Join": Array [
+          "",
+          Array [
+            "https://",
+            Object {
+              "Ref": "teststackapi83F9567D",
+            },
+            ".execute-api.eu-central-1.",
+            Object {
+              "Ref": "AWS::URLSuffix",
+            },
+            "/",
+            Object {
+              "Ref": "teststackapiDeploymentStageprod964F6C3B",
+            },
+            "/",
+          ],
+        ],
+      },
+    },
+  },
+  "Parameters": Object {
+    "version": Object {
+      "Default": "develop-df47282",
+      "Description": "Branch + commit",
+      "Type": "String",
+    },
+  },
+  "Resources": Object {
+    "CustomDomainAliasRecord76233043": Object {
+      "Properties": Object {
+        "AliasTarget": Object {
+          "DNSName": Object {
+            "Fn::GetAtt": Array [
+              "teststackapiCustomDomain66B8CAA7",
+              "RegionalDomainName",
+            ],
+          },
+          "HostedZoneId": Object {
+            "Fn::GetAtt": Array [
+              "teststackapiCustomDomain66B8CAA7",
+              "RegionalHostedZoneId",
+            ],
+          },
+        },
+        "HostedZoneId": "DUMMY",
+        "Name": "test-stack.domain.com.",
+        "Type": "A",
+      },
+      "Type": "AWS::Route53::RecordSet",
+    },
+    "ShopifyAppService724C0220": Object {
+      "DependsOn": Array [
+        "ShopifyAppServiceLBPublicListenerECSGroup9A5133A2",
+        "ShopifyAppServiceLBPublicListenerB0EF685F",
+      ],
+      "Properties": Object {
+        "Cluster": Object {
+          "Ref": "ShopifyCluster0E044B41",
+        },
+        "DeploymentConfiguration": Object {
+          "MaximumPercent": 200,
+          "MinimumHealthyPercent": 50,
+        },
+        "DesiredCount": 1,
+        "EnableECSManagedTags": false,
+        "HealthCheckGracePeriodSeconds": 60,
+        "LaunchType": "FARGATE",
+        "LoadBalancers": Array [
+          Object {
+            "ContainerName": "test-stack-container",
+            "ContainerPort": 8081,
+            "TargetGroupArn": Object {
+              "Ref": "ShopifyAppServiceLBPublicListenerECSGroup9A5133A2",
+            },
+          },
+        ],
+        "NetworkConfiguration": Object {
+          "AwsvpcConfiguration": Object {
+            "AssignPublicIp": "ENABLED",
+            "SecurityGroups": Array [
+              Object {
+                "Fn::GetAtt": Array [
+                  "ShopifyAppServiceSecurityGroup8517D999",
+                  "GroupId",
+                ],
+              },
+            ],
+            "Subnets": Array [
+              "s-12345",
+              "s-67890",
+            ],
+          },
+        },
+        "PropagateTags": "SERVICE",
+        "ServiceName": "test-stack-service",
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "test-stack-fargate-service",
+          },
+        ],
+        "TaskDefinition": Object {
+          "Ref": "ShopifyAppServiceTaskDef4711D7DD",
+        },
+      },
+      "Type": "AWS::ECS::Service",
+    },
+    "ShopifyAppServiceLB7084D25F": Object {
+      "Properties": Object {
+        "LoadBalancerAttributes": Array [
+          Object {
+            "Key": "deletion_protection.enabled",
+            "Value": "false",
+          },
+        ],
+        "Scheme": "internet-facing",
+        "SecurityGroups": Array [
+          Object {
+            "Fn::GetAtt": Array [
+              "ShopifyAppServiceLBSecurityGroup35D5CBD6",
+              "GroupId",
+            ],
+          },
+        ],
+        "Subnets": Array [
+          "s-12345",
+          "s-67890",
+        ],
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "test-stack-load-balancer",
+          },
+        ],
+        "Type": "application",
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+    },
+    "ShopifyAppServiceLBPublicListenerB0EF685F": Object {
+      "Properties": Object {
+        "DefaultActions": Array [
+          Object {
+            "TargetGroupArn": Object {
+              "Ref": "ShopifyAppServiceLBPublicListenerECSGroup9A5133A2",
+            },
+            "Type": "forward",
+          },
+        ],
+        "LoadBalancerArn": Object {
+          "Ref": "ShopifyAppServiceLB7084D25F",
+        },
+        "Port": 80,
+        "Protocol": "HTTP",
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::Listener",
+    },
+    "ShopifyAppServiceLBPublicListenerECSGroup9A5133A2": Object {
+      "Properties": Object {
+        "HealthCheckIntervalSeconds": 10,
+        "HealthCheckPath": "/health",
+        "Port": 80,
+        "Protocol": "HTTP",
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "test-stack-target-group",
+          },
+        ],
+        "TargetGroupAttributes": Array [
+          Object {
+            "Key": "deregistration_delay.timeout_seconds",
+            "Value": "30",
+          },
+        ],
+        "TargetType": "ip",
+        "VpcId": "vpc-12345",
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+    },
+    "ShopifyAppServiceLBSecurityGroup35D5CBD6": Object {
+      "Properties": Object {
+        "GroupDescription": "Automatically created Security Group for ELB MyTestStackShopifyAppServiceLB4781DFF1",
+        "SecurityGroupIngress": Array [
+          Object {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow from anyone on port 80",
+            "FromPort": 80,
+            "IpProtocol": "tcp",
+            "ToPort": 80,
+          },
+        ],
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "test-stack-load-balancer",
+          },
+        ],
+        "VpcId": "vpc-12345",
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "ShopifyAppServiceLBSecurityGrouptoMyTestStackShopifyAppServiceSecurityGroup1BF28AF78081EDAE0EC9": Object {
+      "Properties": Object {
+        "Description": "Load balancer to target",
+        "DestinationSecurityGroupId": Object {
+          "Fn::GetAtt": Array [
+            "ShopifyAppServiceSecurityGroup8517D999",
+            "GroupId",
+          ],
+        },
+        "FromPort": 8081,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "ShopifyAppServiceLBSecurityGroup35D5CBD6",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "ToPort": 8081,
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress",
+    },
+    "ShopifyAppServiceSecurityGroup8517D999": Object {
+      "Properties": Object {
+        "GroupDescription": "MyTestStack/ShopifyAppService/Service/SecurityGroup",
+        "SecurityGroupEgress": Array [
+          Object {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1",
+          },
+        ],
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "test-stack-fargate-service",
+          },
+        ],
+        "VpcId": "vpc-12345",
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "ShopifyAppServiceSecurityGroupfromMyTestStackShopifyAppServiceLBSecurityGroup27698CA38081E9449DA9": Object {
+      "Properties": Object {
+        "Description": "Load balancer to target",
+        "FromPort": 8081,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "ShopifyAppServiceSecurityGroup8517D999",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": Object {
+          "Fn::GetAtt": Array [
+            "ShopifyAppServiceLBSecurityGroup35D5CBD6",
+            "GroupId",
+          ],
+        },
+        "ToPort": 8081,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "ShopifyAppServiceTaskDef4711D7DD": Object {
+      "Properties": Object {
+        "ContainerDefinitions": Array [
+          Object {
+            "Environment": Array [
+              Object {
+                "Name": "SHOPIFY_APP_VERSION",
+                "Value": Object {
+                  "Ref": "version",
+                },
+              },
+            ],
+            "Essential": true,
+            "Image": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  "12345.dkr.ecr.eu-central-1.",
+                  Object {
+                    "Ref": "AWS::URLSuffix",
+                  },
+                  "/shopify-app:",
+                  Object {
+                    "Ref": "version",
+                  },
+                ],
+              ],
+            },
+            "LogConfiguration": Object {
+              "LogDriver": "awslogs",
+              "Options": Object {
+                "awslogs-group": Object {
+                  "Ref": "teststackecsF1DA6AE2",
+                },
+                "awslogs-region": "eu-central-1",
+                "awslogs-stream-prefix": "test-stack-logs",
+              },
+            },
+            "Name": "test-stack-container",
+            "PortMappings": Array [
+              Object {
+                "ContainerPort": 8081,
+                "Protocol": "tcp",
+              },
+            ],
+            "Secrets": Array [
+              Object {
+                "Name": "SHOPIFY_API_KEY",
+                "ValueFrom": Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:",
+                      Object {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":secretsmanager:eu-central-1:12345:secret:test-stack-secrets:SHOPIFY_API_KEY::",
+                    ],
+                  ],
+                },
+              },
+              Object {
+                "Name": "SHOPIFY_API_SECRET",
+                "ValueFrom": Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:",
+                      Object {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":secretsmanager:eu-central-1:12345:secret:test-stack-secrets:SHOPIFY_API_SECRET::",
+                    ],
+                  ],
+                },
+              },
+              Object {
+                "Name": "SHOP",
+                "ValueFrom": Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:",
+                      Object {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":secretsmanager:eu-central-1:12345:secret:test-stack-secrets:SHOP::",
+                    ],
+                  ],
+                },
+              },
+              Object {
+                "Name": "SCOPES",
+                "ValueFrom": Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:",
+                      Object {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":secretsmanager:eu-central-1:12345:secret:test-stack-secrets:SCOPES::",
+                    ],
+                  ],
+                },
+              },
+              Object {
+                "Name": "HOST",
+                "ValueFrom": Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:",
+                      Object {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":secretsmanager:eu-central-1:12345:secret:test-stack-secrets:HOST::",
+                    ],
+                  ],
+                },
+              },
+            ],
+          },
+        ],
+        "Cpu": "256",
+        "ExecutionRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "ShopifyAppServiceTaskDefExecutionRole804DEDDA",
+            "Arn",
+          ],
+        },
+        "Family": "MyTestStackShopifyAppServiceTaskDefC45CCCEF",
+        "Memory": "512",
+        "NetworkMode": "awsvpc",
+        "RequiresCompatibilities": Array [
+          "FARGATE",
+        ],
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "test-stack-fargate-service",
+          },
+        ],
+        "TaskRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "ShopifyAppServiceTaskDefTaskRoleE5743E2E",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::ECS::TaskDefinition",
+    },
+    "ShopifyAppServiceTaskDefExecutionRole804DEDDA": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "ecs-tasks.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "test-stack-fargate-service",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "ShopifyAppServiceTaskDefExecutionRoleDefaultPolicy41A8FF90": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    "arn:",
+                    Object {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":ecr:eu-central-1:12345:repository/shopify-app",
+                  ],
+                ],
+              },
+            },
+            Object {
+              "Action": "ecr:GetAuthorizationToken",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            Object {
+              "Action": Array [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::GetAtt": Array [
+                  "teststackecsF1DA6AE2",
+                  "Arn",
+                ],
+              },
+            },
+            Object {
+              "Action": Array [
+                "secretsmanager:GetSecretValue",
+                "secretsmanager:DescribeSecret",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    "arn:",
+                    Object {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":secretsmanager:eu-central-1:12345:secret:test-stack-secrets-??????",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "ShopifyAppServiceTaskDefExecutionRoleDefaultPolicy41A8FF90",
+        "Roles": Array [
+          Object {
+            "Ref": "ShopifyAppServiceTaskDefExecutionRole804DEDDA",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "ShopifyAppServiceTaskDefTaskRoleE5743E2E": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "ecs-tasks.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "test-stack-fargate-service",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "ShopifyCluster0E044B41": Object {
+      "Properties": Object {
+        "ClusterName": "test-stack-cluster",
+      },
+      "Type": "AWS::ECS::Cluster",
+    },
+    "teststackapi83F9567D": Object {
+      "DependsOn": Array [
+        "ShopifyAppServiceLBPublicListenerECSGroup9A5133A2",
+        "ShopifyAppServiceLBPublicListenerB0EF685F",
+        "ShopifyAppServiceLB7084D25F",
+        "ShopifyAppServiceLBSecurityGroup35D5CBD6",
+        "ShopifyAppServiceLBSecurityGrouptoMyTestStackShopifyAppServiceSecurityGroup1BF28AF78081EDAE0EC9",
+        "ShopifyAppServiceSecurityGroupfromMyTestStackShopifyAppServiceLBSecurityGroup27698CA38081E9449DA9",
+        "ShopifyAppServiceSecurityGroup8517D999",
+        "ShopifyAppService724C0220",
+        "ShopifyAppServiceTaskDefExecutionRoleDefaultPolicy41A8FF90",
+        "ShopifyAppServiceTaskDefExecutionRole804DEDDA",
+        "ShopifyAppServiceTaskDef4711D7DD",
+        "ShopifyAppServiceTaskDefTaskRoleE5743E2E",
+      ],
+      "Properties": Object {
+        "Name": "test-stack-api",
+      },
+      "Type": "AWS::ApiGateway::RestApi",
+    },
+    "teststackapiANYE01297A5": Object {
+      "DependsOn": Array [
+        "ShopifyAppServiceLBPublicListenerECSGroup9A5133A2",
+        "ShopifyAppServiceLBPublicListenerB0EF685F",
+        "ShopifyAppServiceLB7084D25F",
+        "ShopifyAppServiceLBSecurityGroup35D5CBD6",
+        "ShopifyAppServiceLBSecurityGrouptoMyTestStackShopifyAppServiceSecurityGroup1BF28AF78081EDAE0EC9",
+        "ShopifyAppServiceSecurityGroupfromMyTestStackShopifyAppServiceLBSecurityGroup27698CA38081E9449DA9",
+        "ShopifyAppServiceSecurityGroup8517D999",
+        "ShopifyAppService724C0220",
+        "ShopifyAppServiceTaskDefExecutionRoleDefaultPolicy41A8FF90",
+        "ShopifyAppServiceTaskDefExecutionRole804DEDDA",
+        "ShopifyAppServiceTaskDef4711D7DD",
+        "ShopifyAppServiceTaskDefTaskRoleE5743E2E",
+      ],
+      "Properties": Object {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "ANY",
+        "Integration": Object {
+          "IntegrationHttpMethod": "ANY",
+          "Type": "HTTP_PROXY",
+          "Uri": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "http://",
+                Object {
+                  "Fn::GetAtt": Array [
+                    "ShopifyAppServiceLB7084D25F",
+                    "DNSName",
+                  ],
+                },
+              ],
+            ],
+          },
+        },
+        "ResourceId": Object {
+          "Fn::GetAtt": Array [
+            "teststackapi83F9567D",
+            "RootResourceId",
+          ],
+        },
+        "RestApiId": Object {
+          "Ref": "teststackapi83F9567D",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "teststackapiAccount69EF3B46": Object {
+      "DependsOn": Array [
+        "ShopifyAppServiceLBPublicListenerECSGroup9A5133A2",
+        "ShopifyAppServiceLBPublicListenerB0EF685F",
+        "ShopifyAppServiceLB7084D25F",
+        "ShopifyAppServiceLBSecurityGroup35D5CBD6",
+        "ShopifyAppServiceLBSecurityGrouptoMyTestStackShopifyAppServiceSecurityGroup1BF28AF78081EDAE0EC9",
+        "ShopifyAppServiceSecurityGroupfromMyTestStackShopifyAppServiceLBSecurityGroup27698CA38081E9449DA9",
+        "ShopifyAppServiceSecurityGroup8517D999",
+        "ShopifyAppService724C0220",
+        "ShopifyAppServiceTaskDefExecutionRoleDefaultPolicy41A8FF90",
+        "ShopifyAppServiceTaskDefExecutionRole804DEDDA",
+        "ShopifyAppServiceTaskDef4711D7DD",
+        "ShopifyAppServiceTaskDefTaskRoleE5743E2E",
+        "teststackapi83F9567D",
+      ],
+      "Properties": Object {
+        "CloudWatchRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "teststackapiCloudWatchRole5AEC07CC",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::ApiGateway::Account",
+    },
+    "teststackapiCloudWatchRole5AEC07CC": Object {
+      "DependsOn": Array [
+        "ShopifyAppServiceLBPublicListenerECSGroup9A5133A2",
+        "ShopifyAppServiceLBPublicListenerB0EF685F",
+        "ShopifyAppServiceLB7084D25F",
+        "ShopifyAppServiceLBSecurityGroup35D5CBD6",
+        "ShopifyAppServiceLBSecurityGrouptoMyTestStackShopifyAppServiceSecurityGroup1BF28AF78081EDAE0EC9",
+        "ShopifyAppServiceSecurityGroupfromMyTestStackShopifyAppServiceLBSecurityGroup27698CA38081E9449DA9",
+        "ShopifyAppServiceSecurityGroup8517D999",
+        "ShopifyAppService724C0220",
+        "ShopifyAppServiceTaskDefExecutionRoleDefaultPolicy41A8FF90",
+        "ShopifyAppServiceTaskDefExecutionRole804DEDDA",
+        "ShopifyAppServiceTaskDef4711D7DD",
+        "ShopifyAppServiceTaskDefTaskRoleE5743E2E",
+      ],
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "apigateway.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "teststackapiCustomDomain66B8CAA7": Object {
+      "DependsOn": Array [
+        "ShopifyAppServiceLBPublicListenerECSGroup9A5133A2",
+        "ShopifyAppServiceLBPublicListenerB0EF685F",
+        "ShopifyAppServiceLB7084D25F",
+        "ShopifyAppServiceLBSecurityGroup35D5CBD6",
+        "ShopifyAppServiceLBSecurityGrouptoMyTestStackShopifyAppServiceSecurityGroup1BF28AF78081EDAE0EC9",
+        "ShopifyAppServiceSecurityGroupfromMyTestStackShopifyAppServiceLBSecurityGroup27698CA38081E9449DA9",
+        "ShopifyAppServiceSecurityGroup8517D999",
+        "ShopifyAppService724C0220",
+        "ShopifyAppServiceTaskDefExecutionRoleDefaultPolicy41A8FF90",
+        "ShopifyAppServiceTaskDefExecutionRole804DEDDA",
+        "ShopifyAppServiceTaskDef4711D7DD",
+        "ShopifyAppServiceTaskDefTaskRoleE5743E2E",
+      ],
+      "Properties": Object {
+        "DomainName": "test-stack.domain.com",
+        "EndpointConfiguration": Object {
+          "Types": Array [
+            "REGIONAL",
+          ],
+        },
+        "RegionalCertificateArn": Object {
+          "Ref": "teststackdomaincomcertificate9AB529BB",
+        },
+      },
+      "Type": "AWS::ApiGateway::DomainName",
+    },
+    "teststackapiCustomDomainMapMyTestStackteststackapi8B2E959F13369B25": Object {
+      "DependsOn": Array [
+        "ShopifyAppServiceLBPublicListenerECSGroup9A5133A2",
+        "ShopifyAppServiceLBPublicListenerB0EF685F",
+        "ShopifyAppServiceLB7084D25F",
+        "ShopifyAppServiceLBSecurityGroup35D5CBD6",
+        "ShopifyAppServiceLBSecurityGrouptoMyTestStackShopifyAppServiceSecurityGroup1BF28AF78081EDAE0EC9",
+        "ShopifyAppServiceSecurityGroupfromMyTestStackShopifyAppServiceLBSecurityGroup27698CA38081E9449DA9",
+        "ShopifyAppServiceSecurityGroup8517D999",
+        "ShopifyAppService724C0220",
+        "ShopifyAppServiceTaskDefExecutionRoleDefaultPolicy41A8FF90",
+        "ShopifyAppServiceTaskDefExecutionRole804DEDDA",
+        "ShopifyAppServiceTaskDef4711D7DD",
+        "ShopifyAppServiceTaskDefTaskRoleE5743E2E",
+      ],
+      "Properties": Object {
+        "DomainName": Object {
+          "Ref": "teststackapiCustomDomain66B8CAA7",
+        },
+        "RestApiId": Object {
+          "Ref": "teststackapi83F9567D",
+        },
+        "Stage": Object {
+          "Ref": "teststackapiDeploymentStageprod964F6C3B",
+        },
+      },
+      "Type": "AWS::ApiGateway::BasePathMapping",
+    },
+    "teststackapiDeployment184DF6D29d1b2fdb0bf555b3a2fda702f7a91446": Object {
+      "DependsOn": Array [
+        "ShopifyAppServiceLBPublicListenerECSGroup9A5133A2",
+        "ShopifyAppServiceLBPublicListenerB0EF685F",
+        "ShopifyAppServiceLB7084D25F",
+        "ShopifyAppServiceLBSecurityGroup35D5CBD6",
+        "ShopifyAppServiceLBSecurityGrouptoMyTestStackShopifyAppServiceSecurityGroup1BF28AF78081EDAE0EC9",
+        "ShopifyAppServiceSecurityGroupfromMyTestStackShopifyAppServiceLBSecurityGroup27698CA38081E9449DA9",
+        "ShopifyAppServiceSecurityGroup8517D999",
+        "ShopifyAppService724C0220",
+        "ShopifyAppServiceTaskDefExecutionRoleDefaultPolicy41A8FF90",
+        "ShopifyAppServiceTaskDefExecutionRole804DEDDA",
+        "ShopifyAppServiceTaskDef4711D7DD",
+        "ShopifyAppServiceTaskDefTaskRoleE5743E2E",
+        "teststackapiproxyANYA0437DC5",
+        "teststackapiproxyD7A8327F",
+        "teststackapiANYE01297A5",
+      ],
+      "Properties": Object {
+        "Description": "Automatically created by the RestApi construct",
+        "RestApiId": Object {
+          "Ref": "teststackapi83F9567D",
+        },
+      },
+      "Type": "AWS::ApiGateway::Deployment",
+    },
+    "teststackapiDeploymentStageprod964F6C3B": Object {
+      "DependsOn": Array [
+        "ShopifyAppServiceLBPublicListenerECSGroup9A5133A2",
+        "ShopifyAppServiceLBPublicListenerB0EF685F",
+        "ShopifyAppServiceLB7084D25F",
+        "ShopifyAppServiceLBSecurityGroup35D5CBD6",
+        "ShopifyAppServiceLBSecurityGrouptoMyTestStackShopifyAppServiceSecurityGroup1BF28AF78081EDAE0EC9",
+        "ShopifyAppServiceSecurityGroupfromMyTestStackShopifyAppServiceLBSecurityGroup27698CA38081E9449DA9",
+        "ShopifyAppServiceSecurityGroup8517D999",
+        "ShopifyAppService724C0220",
+        "ShopifyAppServiceTaskDefExecutionRoleDefaultPolicy41A8FF90",
+        "ShopifyAppServiceTaskDefExecutionRole804DEDDA",
+        "ShopifyAppServiceTaskDef4711D7DD",
+        "ShopifyAppServiceTaskDefTaskRoleE5743E2E",
+      ],
+      "Properties": Object {
+        "AccessLogSetting": Object {
+          "DestinationArn": Object {
+            "Fn::GetAtt": Array [
+              "teststackapigateway44678F24",
+              "Arn",
+            ],
+          },
+          "Format": "{\\"requestId\\":\\"$context.requestId\\",\\"ip\\":\\"$context.identity.sourceIp\\",\\"user\\":\\"$context.identity.user\\",\\"requestTime\\":\\"$context.requestTime\\",\\"httpMethod\\":\\"$context.httpMethod\\",\\"resourcePath\\":\\"$context.resourcePath\\",\\"status\\":\\"$context.status\\",\\"protocol\\":\\"$context.protocol\\",\\"responseLength\\":\\"$context.responseLength\\"}",
+        },
+        "DeploymentId": Object {
+          "Ref": "teststackapiDeployment184DF6D29d1b2fdb0bf555b3a2fda702f7a91446",
+        },
+        "MethodSettings": Array [
+          Object {
+            "HttpMethod": "*",
+            "ResourcePath": "/*",
+            "ThrottlingBurstLimit": 1000,
+            "ThrottlingRateLimit": 100,
+          },
+        ],
+        "RestApiId": Object {
+          "Ref": "teststackapi83F9567D",
+        },
+        "StageName": "prod",
+      },
+      "Type": "AWS::ApiGateway::Stage",
+    },
+    "teststackapigateway44678F24": Object {
+      "DeletionPolicy": "Delete",
+      "Properties": Object {
+        "LogGroupName": "test-stack-api-gateway",
+        "RetentionInDays": 30,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "teststackapiproxyANYA0437DC5": Object {
+      "DependsOn": Array [
+        "ShopifyAppServiceLBPublicListenerECSGroup9A5133A2",
+        "ShopifyAppServiceLBPublicListenerB0EF685F",
+        "ShopifyAppServiceLB7084D25F",
+        "ShopifyAppServiceLBSecurityGroup35D5CBD6",
+        "ShopifyAppServiceLBSecurityGrouptoMyTestStackShopifyAppServiceSecurityGroup1BF28AF78081EDAE0EC9",
+        "ShopifyAppServiceSecurityGroupfromMyTestStackShopifyAppServiceLBSecurityGroup27698CA38081E9449DA9",
+        "ShopifyAppServiceSecurityGroup8517D999",
+        "ShopifyAppService724C0220",
+        "ShopifyAppServiceTaskDefExecutionRoleDefaultPolicy41A8FF90",
+        "ShopifyAppServiceTaskDefExecutionRole804DEDDA",
+        "ShopifyAppServiceTaskDef4711D7DD",
+        "ShopifyAppServiceTaskDefTaskRoleE5743E2E",
+      ],
+      "Properties": Object {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "ANY",
+        "Integration": Object {
+          "CacheKeyParameters": Array [
+            "method.request.path.proxy",
+          ],
+          "IntegrationHttpMethod": "ANY",
+          "IntegrationResponses": Array [
+            Object {
+              "StatusCode": "200",
+            },
+          ],
+          "RequestParameters": Object {
+            "integration.request.path.proxy": "method.request.path.proxy",
+          },
+          "Type": "HTTP_PROXY",
+          "Uri": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "http://",
+                Object {
+                  "Fn::GetAtt": Array [
+                    "ShopifyAppServiceLB7084D25F",
+                    "DNSName",
+                  ],
+                },
+                "/{proxy}",
+              ],
+            ],
+          },
+        },
+        "RequestParameters": Object {
+          "method.request.path.proxy": true,
+        },
+        "ResourceId": Object {
+          "Ref": "teststackapiproxyD7A8327F",
+        },
+        "RestApiId": Object {
+          "Ref": "teststackapi83F9567D",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "teststackapiproxyD7A8327F": Object {
+      "DependsOn": Array [
+        "ShopifyAppServiceLBPublicListenerECSGroup9A5133A2",
+        "ShopifyAppServiceLBPublicListenerB0EF685F",
+        "ShopifyAppServiceLB7084D25F",
+        "ShopifyAppServiceLBSecurityGroup35D5CBD6",
+        "ShopifyAppServiceLBSecurityGrouptoMyTestStackShopifyAppServiceSecurityGroup1BF28AF78081EDAE0EC9",
+        "ShopifyAppServiceSecurityGroupfromMyTestStackShopifyAppServiceLBSecurityGroup27698CA38081E9449DA9",
+        "ShopifyAppServiceSecurityGroup8517D999",
+        "ShopifyAppService724C0220",
+        "ShopifyAppServiceTaskDefExecutionRoleDefaultPolicy41A8FF90",
+        "ShopifyAppServiceTaskDefExecutionRole804DEDDA",
+        "ShopifyAppServiceTaskDef4711D7DD",
+        "ShopifyAppServiceTaskDefTaskRoleE5743E2E",
+      ],
+      "Properties": Object {
+        "ParentId": Object {
+          "Fn::GetAtt": Array [
+            "teststackapi83F9567D",
+            "RootResourceId",
+          ],
+        },
+        "PathPart": "{proxy+}",
+        "RestApiId": Object {
+          "Ref": "teststackapi83F9567D",
+        },
+      },
+      "Type": "AWS::ApiGateway::Resource",
+    },
+    "teststackdomaincomcertificate9AB529BB": Object {
+      "Properties": Object {
+        "DomainName": "test-stack.domain.com",
+        "DomainValidationOptions": Array [
+          Object {
+            "DomainName": "test-stack.domain.com",
+            "HostedZoneId": "DUMMY",
+          },
+        ],
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "test-stack.domain.com-certificate",
+          },
+        ],
+        "ValidationMethod": "DNS",
+      },
+      "Type": "AWS::CertificateManager::Certificate",
+    },
+    "teststackecsF1DA6AE2": Object {
+      "DeletionPolicy": "Delete",
+      "Properties": Object {
+        "LogGroupName": "test-stack-ecs",
+        "RetentionInDays": 30,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Delete",
+    },
+  },
+}
+`;
