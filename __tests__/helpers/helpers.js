@@ -1,5 +1,4 @@
 import { waitFor } from "@testing-library/react";
-import nock from "nock";
 import { ORDERS_OFFSET } from "../../constants/ordersConstants";
 
 const GRAPHQL_REQUESTS_TO_IGNORE = [
@@ -43,37 +42,6 @@ export const waitForMocksDone = async function (mocks) {
     }
   );
 };
-
-export function getAuthNock(status, response) {
-  return nock(MOCK_BACKEND_URL)
-    .post("/api/v1/auth")
-    .reply(status, () => {
-      return response;
-    });
-}
-
-function generateSalesOrdersMock(id, state, order_num) {
-  return {
-    id,
-    state,
-    order_num,
-  };
-}
-export function getOrdersNock() {
-  return nock(MOCK_BACKEND_URL)
-    .get("/api/v1/sales/orders")
-    .query(true)
-    .reply(200, () => {
-      return {
-        total_results: 3,
-        sales_orders: [
-          generateSalesOrdersMock(1, "queue", "2103"),
-          generateSalesOrdersMock(2, "picking", "2104"),
-          generateSalesOrdersMock(3, "packing", "2105"),
-        ],
-      };
-    });
-}
 
 export function defineWindowMatchMedia() {
   window.matchMedia =

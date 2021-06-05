@@ -14,13 +14,11 @@ import axios from "axios";
 import {
   assertNocksDone,
   defineWindowMatchMedia,
-  getOrdersNock,
   graphqlListOrdersResponse,
   graphqlListOrdersResponseNoResults,
   graphqlOrdersResponseWithErrors,
   graphqlSearchOrdersResponse,
   shopifyOrderMock,
-  waitForMocksDone,
 } from "../helpers/helpers";
 import { authStorageKeys } from "../../constants/globalConstants";
 import nock from "nock";
@@ -59,15 +57,11 @@ beforeEach(() => {
 });
 
 describe("Orders Resource List - List first orders", () => {
-  test("Should fetch shopify orders and render orders data", async () => {
+  it("should fetch shopify orders and render orders data", async () => {
     await act(async () => {
       queryMock.mockQuery(graphqlListOrdersResponse);
-
-      const ordersNock = getOrdersNock();
       renderResourceListForm(QUERY_MODE.listOrders, { offset: ORDERS_OFFSET });
       await new Promise((resolve) => setTimeout(resolve, 100));
-
-      await waitForMocksDone([ordersNock]);
       const salesOrdersViewTitle = await waitFor(() =>
         screen.getByText("SALES ORDERS", {
           exact: false,
@@ -101,7 +95,7 @@ describe("Orders Resource List - List first orders", () => {
     });
   });
 
-  test("Should fetch shopify orders and render errors if response fails", async () => {
+  it("should fetch shopify orders and render errors if response fails", async () => {
     await act(async () => {
       queryMock.mockQuery(graphqlOrdersResponseWithErrors);
 
@@ -120,22 +114,17 @@ describe("Orders Resource List - List first orders", () => {
 });
 
 describe("Orders Resource List - search order", () => {
-  test("search order and render results", async () => {
+  it("search order and render results", async () => {
     await act(async () => {
       queryMock.mockQuery(graphqlSearchOrdersResponse);
-
-      const ordersNock = getOrdersNock();
       renderResourceListForm(QUERY_MODE.searchOrder, { query: "name:#2104" });
       await new Promise((resolve) => setTimeout(resolve, 100));
-
-      await waitForMocksDone([ordersNock]);
-
       const orderTitle = screen.getByText("#2104");
       expect(orderTitle).toBeInTheDocument();
     });
   });
 
-  test("search order and render error text when no orders is found", async () => {
+  it("search order and render error text when no orders is found", async () => {
     await act(async () => {
       queryMock.mockQuery(graphqlListOrdersResponseNoResults);
 
