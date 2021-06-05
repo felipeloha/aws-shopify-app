@@ -41,7 +41,7 @@ Modifications done to https://github.com/Shopify/shopify-app-node
 1. The app created by the shopify cli is based on a .env file to read the configuration. This project separates the code/docker image from the configuration so that the same docker image can be deployed to different instances and it still works. For this purpose the next.config.js was modified to use publicRuntimeConfig to receive the SHOPIFY_API_KEY from the ENV and make it available on the frontend.
 2. A health endpoint /health is implemented which is used from the AWS ECS
 
-### Infrastructure
+### Infrastructure resources
 
 The infrastructure project creates the following resources:
 
@@ -49,6 +49,9 @@ The infrastructure project creates the following resources:
 - An SSL certificate
 - An api gateway with a custom domain (linked to the certificate) that proxies all calls to the load balancer
 - A route 53 alias pointing to the api gateway
+
+Diagram:
+![Alt](resources.png)
 
 # Local development
 
