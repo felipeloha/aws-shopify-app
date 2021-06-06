@@ -83,6 +83,12 @@ SCOPES: "read_orders,read_all_orders",
 HOST: `https://${subdomain}`,
 ```
 
+## CDK INFRASTRUCTURE DEPLOYMENT
+
+Build and test: `npm i && npm run build && npm test`
+CDK synth: `STACK_NAME=shopify cdk synth`
+CDK deploy: `STACK_NAME=shopify cdk deploy --parameters version=master-244fc86`
+
 ## Docker
 
 ### Build
