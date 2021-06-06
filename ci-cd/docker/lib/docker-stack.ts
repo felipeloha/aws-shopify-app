@@ -4,7 +4,7 @@ import ecr = require('@aws-cdk/aws-ecr');
 import { Role, ServicePrincipal, PolicyStatement } from '@aws-cdk/aws-iam';
 
 export class DockerStack extends cdk.Stack {
-  public static repoName = 'shopify-app'
+  public static repoName = 'aws-shopify-app';
   public static projectName = `${DockerStack.repoName}-docker`;
 
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
