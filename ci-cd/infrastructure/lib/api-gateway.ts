@@ -5,15 +5,14 @@ import * as route53 from '@aws-cdk/aws-route53';
 import * as apigateway from '@aws-cdk/aws-apigateway';
 import * as targets from '@aws-cdk/aws-route53-targets';
 import * as cwLogs from '@aws-cdk/aws-logs';
-
-const domain = "domain.com";
+import { domain } from "./config";
 
 export default function createApiGateway(
   stack: any,
   stackName: string,
-  subdomain: string,
   fargateService: ecs_patterns.ApplicationLoadBalancedFargateService,
 ) {
+  const subdomain = `${stackName}.${domain}`;
   const targetURL = "http://" + fargateService.listener.loadBalancer.loadBalancerDnsName;
   const hostedZone = route53.HostedZone.fromLookup(stack, 'Zone', { domainName: domain });
 

@@ -8,8 +8,6 @@ import * as sm from "@aws-cdk/aws-secretsmanager";
 import createApiGateway from './api-gateway';
 import { envSecretsConfig } from "./config";
 
-const domain = "domain.com";
-
 export class ShopifyAppInfrastructureStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -21,7 +19,6 @@ export class ShopifyAppInfrastructureStack extends cdk.Stack {
     });
 
     const stackName = cdk.Stack.of(this).stackName;
-    const subdomain = `${stackName}.${domain}`;
 
     //ecs
     const vpc = ec2.Vpc.fromLookup(this, "vpc", { isDefault: true });
@@ -101,6 +98,6 @@ export class ShopifyAppInfrastructureStack extends cdk.Stack {
     cdk.Tags.of(fargateService.targetGroup).add('Name', `${stackName}-target-group`);
     cdk.Tags.of(fargateService.listener.loadBalancer).add('Name', `${stackName}-load-balancer`);
 
-    createApiGateway(this, stackName, subdomain, fargateService);
+    createApiGateway(this, stackName, fargateService);
   }
 }

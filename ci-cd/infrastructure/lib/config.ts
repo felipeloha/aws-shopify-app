@@ -7,3 +7,5 @@ export const envSecretsConfig = {
     host: "HOST",
   },
 };
+
+export const domain = "domain.com";
