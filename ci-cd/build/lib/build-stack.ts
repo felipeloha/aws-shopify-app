@@ -4,7 +4,7 @@ import s3 = require('@aws-cdk/aws-s3');
 import { Role, ServicePrincipal, PolicyStatement } from '@aws-cdk/aws-iam';
 
 export class BuildStack extends cdk.Stack {
-  public static repoName = 'shopify-app'
+  public static repoName = 'aws-shopify-app';
   public static projectName = `${BuildStack.repoName}-build`;
   public static bucketName = `codebuild-${BuildStack.projectName}-bucket`;
 
